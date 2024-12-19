@@ -1,8 +1,6 @@
 from django.core.management.base import BaseCommand
 from django.db import connection, transaction
-from cadastros.models import (
-    Departamento, Perfil, Usuario
-)
+from cadastros.models import Departamento, Perfil, Usuario
 
 class Command(BaseCommand):
     help = 'Redefine o sistema, apagando todos os dados do app cadastros e recriando os dados padrões.'
