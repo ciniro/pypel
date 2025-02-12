@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.template.loader import render_to_string
 from django.db.models import Q, F, Count, Subquery, OuterRef, FloatField, Sum, ExpressionWrapper
-from .models import Usuario, Perfil, Departamento
+from .models import Usuario, Perfil, Departamento, Atividade
 from django.contrib import messages
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
@@ -117,3 +117,268 @@ def pesquisar_departamento_por_nome(request):
     return JsonResponse({
         'html': render_to_string('departamentos_table.html', {'page_obj': page_obj, 'query': departamento_nome, 'request': request})
     })
+
+#CADASTRO DE USUARIOS
+@login_required
+def usuarios(request):
+    if request.session.get('perfil_atual') not in {'Administrador'}:
+        messages.error(request, 'Você não tem permissão para acessar esta página com este perfil.')
+        return redirect('core:main')
+
+    if request.method == "POST":
+        acao = request.POST.get("btnAcao")
+
+        if acao == "novo_usuario":
+            email = request.POST.get('txtEmail')
+            if Usuario.objects.filter(email=email).exists():
+                messages.error(request, 'Este e-mail já está em uso!')
+                return redirect('cadastros:usuarios')
+
+            usuario = Usuario(
+                nome=request.POST.get('txtNome'),
+                email=email,
+                departamento_id=request.POST.get('slcDepartamento')
+            )
+            usuario.set_password(request.POST.get('txtSenha'))
+            usuario.save()
+            
+            perfis = request.POST.getlist('chkPerfis')
+            for perfil_id in perfis:
+                perfil = Perfil.objects.get(id=perfil_id)
+                usuario.perfis.add(perfil)
+                
+            messages.success(request, 'Usuário cadastrado com sucesso!')
+            return redirect('cadastros:usuarios')
+
+        elif acao == "alterar_usuario":
+            usuario_id = request.POST.get('txtId')
+            usuario = Usuario.objects.get(id=usuario_id)
+            usuario.nome = request.POST.get('txtNome')
+            usuario.email = request.POST.get('txtEmail')
+            usuario.departamento_id = request.POST.get('slcDepartamento')
+            if request.POST.get('txtSenha'):
+                usuario.set_password(request.POST.get('txtSenha'))
+            usuario.save()
+            
+            usuario.perfis.clear()
+            perfis = request.POST.getlist('chkPerfis')
+            for perfil_id in perfis:
+                perfil = Perfil.objects.get(id=perfil_id)
+                usuario.perfis.add(perfil)
+
+            messages.success(request, 'Usuário atualizado com sucesso!')
+            return redirect('cadastros:usuarios')
+
+    usuarios_lista = Usuario.objects.all().order_by('nome').exclude(Q(id=request.session['id_atual']))
+    departamentos_lista = Departamento.objects.all().order_by('nome').exclude(nome__iexact="Geral")
+
+    paginator = Paginator(usuarios_lista, settings.NUMBER_GRID_PAGES)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    perfis_lista = Perfil.objects.all()
+
+    return render(request, "usuarios.html", {
+        'page_obj': page_obj,
+        'perfis': perfis_lista,
+        'departamentos': departamentos_lista
+    })
+
+@login_required
+def verificar_email(request):
+    email = request.GET.get('email', None)
+    data = {
+        'is_taken': Usuario.objects.filter(email=email).exists()
+    }
+    return JsonResponse(data)
+
+@login_required
+def obter_usuario_por_id(request):
+    usuario_id = request.GET.get('usuario_id', None)
+    usuario = Usuario.objects.get(id=usuario_id)
+    perfis_usuario = usuario.perfis.values_list('id', flat=True)
+    usuario_dados = {
+        'id': usuario.id,
+        'nome': usuario.nome,
+        'email': usuario.email,
+        'senha': '',
+        'departamento_id': usuario.departamento.id,
+        'perfis': list(perfis_usuario),
+    }
+    return JsonResponse(usuario_dados)
+
+@login_required
+def excluir_usuario(request):
+    if request.method == "POST":
+        usuario_id = request.POST.get('usuario_id')
+        usuario = Usuario.objects.get(id=usuario_id)
+        usuario.delete()
+        return JsonResponse({'success': True})
+
+@login_required
+def pesquisar_usuario_por_nome(request):
+    query = request.GET.get('usuario_nome', '')
+    page_number = request.GET.get('page')
+
+    usuarios_lista = Usuario.objects.filter(nome__icontains=query).order_by('nome').exclude(Q(id=request.session['id_atual']))
+
+    paginator = Paginator(usuarios_lista, settings.NUMBER_GRID_PAGES)
+    page_obj = paginator.get_page(page_number)
+
+    return JsonResponse({
+        'html': render_to_string('usuarios_table.html', {'page_obj': page_obj, 'query': query, 'request': request})
+    })
+#----------------------------------------------------
+
+#CADASTRO DE ATIVIDADES
+@login_required
+def atividades(request):
+    if request.session.get('perfil_atual') not in {'Administrador'}:
+        messages.error(request, 'Você não tem permissão para acessar esta página com este perfil.')
+        return redirect('core:main')
+    
+    if request.method == "POST":
+        acao = request.POST.get("btnAcao")
+
+        if acao == "nova_atividade":
+            nome = request.POST.get('txtNome')
+            
+            atividade = Atividade(
+                nome=nome,
+            )
+            
+            atividade.save()
+
+            messages.success(request, 'Atividade cadastrada com sucesso!')
+            return redirect('cadastros:atividades')
+
+        elif acao == "alterar_atividade":
+            atividade_id = request.POST.get('txtId')
+            atividade = Atividade.objects.get(id=atividade_id)
+
+            atividade.nome = request.POST.get('txtNome')
+            atividade.save()
+
+            messages.success(request, 'Atividade atualizada com sucesso!')
+            return redirect('cadastros:atividades')
+
+    atividades_lista = Atividade.objects.all().order_by('nome')
+
+    paginator = Paginator(atividades_lista, settings.NUMBER_GRID_PAGES)
+    numero_pagina = request.GET.get('page')
+    page_obj = paginator.get_page(numero_pagina)
+
+    return render(request, "atividades.html", {'page_obj': page_obj})
+
+@login_required
+def obter_atividade_por_id(request):
+    atividade_id = request.GET.get('atividade_id', None)
+    atividade = Atividade.objects.get(id=atividade_id)
+    
+    #coordenadores
+    coordenadores = atividade.coordenadores.values('id', 'nome', 'email', 'departamento__sigla').order_by('nome')
+    
+    atividade_dados = {
+        'id': atividade.id,
+        'nome': atividade.nome,
+        'coordenadores': list(coordenadores),
+    }
+
+    return JsonResponse(atividade_dados)
+
+@login_required
+def excluir_atividade(request):
+    if request.method == "POST":
+        atividade_id = request.POST.get('atividade_id')
+        atividade = Atividade.objects.filter(id=atividade_id).first()
+        atividade.delete()
+        
+        return JsonResponse({'success': True, 'message': 'Atividade excluída com sucesso!'})
+    return JsonResponse({'success': False, 'message': 'Você não tem permissão para acesso.'}, status=405)
+    
+@login_required
+def pesquisar_atividade_por_nome(request):
+    atividade_nome = request.GET.get('atividade_nome', '')
+    numero_pagina = request.GET.get('page')
+    
+    atividades_lista = Atividade.objects.filter(nome__icontains=atividade_nome).order_by('nome')
+
+    paginator = Paginator(atividades_lista, settings.NUMBER_GRID_PAGES)
+    page_obj = paginator.get_page(numero_pagina)
+
+    return JsonResponse({
+        'html': render_to_string('atividades_table.html', {'page_obj': page_obj, 'query': atividade_nome, 'request': request})
+    })
+
+#RELACIONANDO ATIVIDADES COM COORDENADORES (USUARIOS)
+@login_required
+def adicionar_coordenador_de_atividade(request):
+    atividade_id = request.POST.get('atividade_id')
+    coordenador_id = request.POST.get('coordenador_id')
+
+    atividade = Atividade.objects.get(id=atividade_id)
+    coordenador = Usuario.objects.get(id=coordenador_id)
+    atividade.coordenadores.add(coordenador)
+    
+    return JsonResponse({'success': True, 'message': 'Coordenador adicionado com sucesso!'})
+    
+@login_required
+def excluir_coordenador_de_atividade(request):
+    atividade_id = request.POST.get('atividade_id')
+    coordenador_id = request.POST.get('coordenador_id')
+
+    atividade = Atividade.objects.get(id=atividade_id)
+    coordenador = Usuario.objects.get(id=coordenador_id)
+    atividade.coordenadores.remove(coordenador)
+    
+    return JsonResponse({'success': True, 'message': 'Coordenador removido com sucesso!'})
+
+@require_POST    
+@login_required
+def exibir_coordenadores_possiveis_para_atividade(request):
+    atividade_id = request.POST.get('txtPostIdCoordenadores')    
+    coordenadores = Usuario.objects.order_by('nome').exclude(nome__iexact="Administrador")
+
+    coordenadores_ja_associados = []
+    if atividade_id:
+        atividade = Atividade.objects.get(id=atividade_id)
+        coordenadores_ja_associados = list(atividade.coordenadores.values_list('id', flat=True))
+
+    paginator = Paginator(coordenadores, settings.NUMBER_GRID_MODAL)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        'page_obj': page_obj,
+        'atividade_id': atividade_id,
+        'coordenadores_ja_associados': coordenadores_ja_associados
+    }
+    
+    #carrega a pagina de adicao de coordenadores a atividades
+    return render(request, 'atividades_add_coordenadores.html', context)
+
+@login_required
+def pesquisar_coordenador_por_nome_para_atividade(request):
+    nome = request.GET.get('nome', '')
+    page_number = request.GET.get('page', 1)
+    atividade_id = request.GET.get('atividade_id', '')
+    coordenadores = Usuario.objects.filter(nome__icontains=nome).order_by('nome').exclude(nome__iexact="Administrador")
+
+    coordenadores_ja_associados = []
+    if atividade_id:
+        atividade = Atividade.objects.get(id=atividade_id)
+        coordenadores_ja_associados = list(atividade.coordenadores.values_list('id', flat=True))
+
+    paginator = Paginator(coordenadores, settings.NUMBER_GRID_MODAL)
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        'page_obj': page_obj,
+        'atividade_id': atividade_id,
+        'coordenadores_ja_associados': coordenadores_ja_associados,
+        'request': request
+    }
+    
+    #carrega o grid com coordenadores atualizado dentro de atividades_add_coordenadores.html
+    html = render_to_string('atividades_add_coordenadores_table.html', context)
+    return JsonResponse({'html': html})
+#----------------------------------------------------

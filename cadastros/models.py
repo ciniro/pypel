@@ -74,4 +74,11 @@ class Usuario(AbstractBaseUser):
 
     def tem_perfil(self, perfil_nome):
         return self.perfis.filter(nome=perfil_nome).exists()
+    
+class Atividade(models.Model):
+    nome = models.CharField(max_length=500)
+    coordenadores = models.ManyToManyField('Usuario', related_name='coordenadores')
+        
+    def __str__(self):
+        return self.nome
 

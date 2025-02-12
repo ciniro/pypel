@@ -31,6 +31,7 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNavDropdown">
                     <ul class="navbar-nav">
+
                         {% if request.session.perfil_atual == 'Administrador' %}
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarMenuExemplo" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -38,6 +39,8 @@
                             </a>
                             <div class="dropdown-menu" aria-labelledby="navbarMenuExemplo">
                                 <a class="dropdown-item" href="{% url 'cadastros:departamentos' %}">Departamentos</a>
+                                <a class="dropdown-item" href="{% url 'cadastros:usuarios' %}">Usuários</a>
+                                <a class="dropdown-item" href="{% url 'cadastros:atividades' %}">Atividades</a>
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="{% url 'autenticacao:logout' %}">
                                     <img src="{% static 'img/my_logout.png' %}" width="20px" alt="Logout">
@@ -45,6 +48,7 @@
                                 </a>
                             </div>
                         </li>
+                        
                         {% endif %}
 
                     </ul>

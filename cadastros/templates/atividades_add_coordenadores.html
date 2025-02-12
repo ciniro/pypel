@@ -1,0 +1,77 @@
+{% extends 'master_modal.html' %}
+{% load static %}
+
+{% block conteudo %}
+
+<!-- JANELA QUE CARREGA OS DADOS DOS USUÁRIOS QUE PODEM SER ASSOCIADOS AO ATIVIDADES COMO COORDENADORES -->
+<div class="container mt-5">
+    <h1 class="mb-4">Associar Coordenadores</h1>
+    <div class="form-group row align-items-center mb-4">
+        <div class="col-auto">
+            <img src="{% static 'img/search.png' %}" alt="icone de uma lupa" width="20" height="20">
+        </div>
+        <div class="text-left">
+            <label for="txtBuscaCoordenador" class="col-form-label">Pesquisar por nome:</label>
+        </div>
+        <div class="col">
+            <input type="text" class="form-control" id="txtBuscaCoordenador" placeholder="Digite o nome">
+        </div>
+    </div>
+    <!-- campo que guarda o ID da atividade recebido via POST e setado aqui no javascript dessa pagina -->
+    <input type="hidden" id="txtIdAtividade" name="txtIdAtividade" value="">
+    <!-- grid onde aparecem todos os usuarios que podem ser associados a atividade como coordenadores -->
+    <div id="coordenadores-table">            
+        {% include 'atividades_add_coordenadores_table.html' %}
+    </div>
+
+</div>
+
+<!-- scripts da associacao de coordenadores as atividades -->
+<script>
+    $(document).ready(function() {
+        /*seta o ID da atividade aqui em txtIdAtividade que foi passado via POST na variavel txtPostIdCoordenadores 
+        do form frmGridCarregaCoordenadores em atividades.html*/
+        var atividadeId = window.opener.$('#txtPostIdCoordenadores').val();
+        //seta o txtIdAtividade com o ID da atividade capturado
+        $('#txtIdAtividade').val(atividadeId);
+
+        //rotinas que permitem a pesquisa de coordenadores no grid coordenadores-table que vem de atividades_add_coordenadores_table.html
+        function pesquisaCoordenadores(nome, page) {
+            const atividadeId = $('#txtIdAtividade').val();
+            $.ajax({
+                url: '{% url "cadastros:pesquisar_coordenador_por_nome_para_atividade" %}',
+                data: {
+                    'nome': nome,
+                    'page': page,
+                    'atividade_id': atividadeId
+                },
+                success: function(data) {
+                    $('#coordenadores-table').html(data.html);
+                }
+            });
+        }
+
+        $('#txtBuscaCoordenador').on('input', function() {
+            const nome = $(this).val();
+            pesquisaCoordenadores(nome, 1);
+        });
+
+        $(document).on('click', '.page-link', function(e) {
+            e.preventDefault();
+            const page = $(this).data('page');
+            const nome = $('#txtBuscaCoordenador').val();
+            pesquisaCoordenadores(nome, page);
+        });
+
+        //restaura as interações na janela pai quando esta janela filha é fechada
+        window.onbeforeunload = function() {
+            if (window.opener && !window.opener.closed) {
+                alert('fechou');
+                window.opener.habilitaInteracoes();
+            }
+        };
+        
+    });
+</script>
+    
+{% endblock %}
