@@ -1,4 +1,7 @@
 .
+├── _mockups
+│   ├── cadastros.epgz
+│   └── cadastros.pdf
 ├── _roteiro.txt
 ├── autenticacao
 │   ├── __init__.py
@@ -19,9 +22,24 @@
 │   ├── backends.py
 │   ├── migrations
 │   │   ├── 0001_initial.py
+│   │   ├── 0002_atividade.py
+│   │   ├── 0003_remove_atividade_tempo.py
 │   │   └── __init__.py
 │   ├── models.py
+│   ├── templates
+│   │   ├── atividades.html
+│   │   ├── atividades_add_coordenadores.html
+│   │   ├── atividades_add_coordenadores_table.html
+│   │   ├── atividades_table.html
+│   │   ├── departamentos.html
+│   │   ├── departamentos_table.html
+│   │   ├── usuarios.html
+│   │   └── usuarios_table.html
+│   ├── templatetags
+│   │   ├── __init__.py
+│   │   └── custom_filters.py
 │   ├── tests.py
+│   ├── urls.py
 │   └── views.py
 ├── config
 │   ├── __init__.py
@@ -40,7 +58,8 @@
 │   ├── templates
 │   │   ├── index.html
 │   │   ├── main.html
-│   │   └── master.html
+│   │   ├── master.html
+│   │   └── master_modal.html
 │   ├── tests.py
 │   ├── urls.py
 │   └── views.py
@@ -135,4 +154,4 @@
 ├── structure.txt
 └── version.txt
 
-19 directories, 117 files
+22 directories, 133 files

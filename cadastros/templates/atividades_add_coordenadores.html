@@ -3,7 +3,7 @@
 
 {% block conteudo %}
 
-<!-- JANELA QUE CARREGA OS DADOS DOS USUÁRIOS QUE PODEM SER ASSOCIADOS AO ATIVIDADES COMO COORDENADORES -->
+<!-- JANELA QUE CARREGA OS DADOS DOS USUARIOS QUE PODEM SER ASSOCIADOS AO ATIVIDADES COMO COORDENADORES -->
 <div class="container mt-5">
     <h1 class="mb-4">Associar Coordenadores</h1>
     <div class="form-group row align-items-center mb-4">
@@ -63,7 +63,7 @@
             pesquisaCoordenadores(nome, page);
         });
 
-        //restaura as interações na janela pai quando esta janela filha é fechada
+        //restaura as interacoes na janela pai quando esta janela filha e fechada
         window.onbeforeunload = function() {
             if (window.opener && !window.opener.closed) {
                 alert('fechou');

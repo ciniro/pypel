@@ -149,21 +149,6 @@
             });
         }
 
-        //filtra por nome
-        function filtraDepartamentoPorNome() {
-            let departamento_nome = $('#txtBuscaNome').val();
-            $.ajax({
-                url: '{% url "cadastros:pesquisar_departamento_por_nome" %}',
-                data: {
-                    'departamento_nome': departamento_nome
-                },
-                success: function(data) {
-                    $('#departamentos-table').html(data.html);
-                    clickNoGrid(); //reanexa o evento de clique apos a atualizacao da tabela
-                }
-            });
-        }
-
         //manipulacao do botao de exclusao
         let apagarDepartamentoPorID;
         $('.delete-btn').click(function() {
@@ -195,6 +180,21 @@
             });
         });
 
+        //filtra por nome
+        function filtraDepartamentoPorNome() {
+            let departamento_nome = $('#txtBuscaNome').val();
+            $.ajax({
+                url: '{% url "cadastros:pesquisar_departamento_por_nome" %}',
+                data: {
+                    'departamento_nome': departamento_nome
+                },
+                success: function(data) {
+                    $('#departamentos-table').html(data.html);
+                    clickNoGrid(); //reanexa o evento de clique apos a atualizacao da tabela
+                }
+            });
+        }
+
         //evento de input na caixa de texto de pesquisa
         $('#txtBuscaNome').on('input', function () {
             filtraDepartamentoPorNome();
@@ -207,7 +207,7 @@
             'use strict'
             //carrega os formularios do bootstrap que tem validacao customizada
             const forms = document.querySelectorAll('.needs-validation')
-            //loop nesses formularios para evitar o envio do formulário se ele nao for valido
+            //loop nesses formularios para evitar o envio do formulario se ele nao for valido
             Array.from(forms).forEach(form => {
                 form.addEventListener('submit', event => {
                     if (!form.checkValidity()) {

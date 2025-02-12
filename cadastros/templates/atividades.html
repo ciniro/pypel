@@ -50,6 +50,7 @@
         
         <form class="needs-validation" method="POST" action="{% url 'cadastros:atividades' %}" novalidate> 
             {% csrf_token %}
+
             <!-- codigo -->
             <input type="hidden" name="txtId" id="txtId" value="">
 
@@ -80,7 +81,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <!-- Será preenchido dinamicamente -->
+                                <!-- sera preenchido dinamicamente -->
                             </tbody>
                         </table>
                         <div class="text-left">
@@ -90,7 +91,8 @@
                         </div>
                     </div>
                 </div>
-            </div>         
+            </div>       
+
             <!-- acoes -->                                 
             <div class="form-group row align-items-center">
                 <div class="col-sm-12 text-right">
@@ -147,7 +149,7 @@
                 //carregamento dos campos id----------------------------
                 //txtId é o campo hidden que guarda o id da atividade nesta pagina
                 $('#txtId').val(atividade_dados.id);
-                //txtPostIdCoordenadores é o campo hidden que guarda o id da atividade no form que abre a janela para associar coordenadores
+                //txtPostIdCoordenadores e o campo hidden que guarda o id da atividade no form que abre a janela para associar coordenadores
                 $('#txtPostIdCoordenadores').val(atividade_dados.id);
                 //------------------------------------------------------
 
@@ -257,7 +259,7 @@
         });
     }
 
-    //manipulação do botão de exclusao
+    //manipulacao do botao de exclusao
     let apagarAtividadePorID;
     $('.delete-btn').click(function() {
         apagarAtividadePorID = $(this).data('id');
@@ -298,7 +300,7 @@
             },
             success: function(data) {
                 $('#atividades-table').html(data.html);
-                clickNoGrid(); //reanexa o evento de clique apos a atualizacao da tabela
+                clickNoGrid();
             }
         });
     }
@@ -308,7 +310,7 @@
         filtraAtividadePorNome();
     });
 
-    clickNoGrid(); //anexa o evento de clique nas linhas da tabela ao carregar a pagina
+    clickNoGrid();
 
     //eventos para lidar com a janela modal de associar coordenadores
     function desabilitaInteracoes() {

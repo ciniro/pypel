@@ -1,25 +1,25 @@
 PYPEL - SISTEMA DE GERENCIAMENTO DE PAPELARIA
-VERSÃO 0.01 - sistema de autenticação concluído - 22/01/2024
+VERSÃO 1.00 - sistema de autenticação concluído - 12/02/2025
 
 https://github.com/ciniro/pypel
 Ciniro Aparecido Leite Nametala
 ciniro@gmail.com
 
 1. ABNT
-Nametala, Ciniro Aparecido Leite. PYPEL - Sistema de Gerenciamento de Papelaria. [S.l.]: [s.n.], 2024. Disponível em: https://github.com/ciniro/pypel. Acesso em: [data de acesso].
+Nametala, Ciniro Aparecido Leite. PYPEL - Sistema de Gerenciamento de Papelaria. [S.l.]: [s.n.], 2025. Disponível em: https://github.com/ciniro/pypel. Acesso em: [data de acesso].
 
 2. IEEE
 C. A. L. Nametala, "PYPEL - Sistema de Gerenciamento de Papelaria," [Online]. Disponível em: https://github.com/ciniro/pypel. [Acesso em: dia, mês, ano].
 
 
 3. APA
-Nametala, C. A. L. (2024). PYPEL - Sistema de Gerenciamento de Papelaria. Acesso em [data de acesso], de https://github.com/ciniro/pypel.
+Nametala, C. A. L. (2025). PYPEL - Sistema de Gerenciamento de Papelaria. Acesso em [data de acesso], de https://github.com/ciniro/pypel.
 
 4. BibTeX
-@misc{nametala2024pypel,
+@misc{nametala2025pypel,
   author = {Nametala, Ciniro Aparecido Leite},
   title = {PYPEL - Sistema de Gerenciamento de Papelaria},
-  year = {2024},
+  year = {2025},
   howpublished = {\url{https://github.com/ciniro/pypel}},
   note = {Acessado em: data de acesso}
 }

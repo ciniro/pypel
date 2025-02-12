@@ -33,7 +33,7 @@ def login(request):
                 
                 messages.success(request, 'Login realizado com sucesso!')
                 
-                #no futuro iremos separar em diferentes paginas
+                #pode separar em diferentes paginas ou alterar os links da main
                 if request.session.get('perfil_atual') in {'Administrador', 'Estoquista', 'Vendedor'}:
                     return redirect('core:main')
                 
