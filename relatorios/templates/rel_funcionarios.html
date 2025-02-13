@@ -84,26 +84,26 @@
                 <img src="{% static 'img/back.png' %}" alt="Voltar" width="30" height="30">
             </button>
         </div>
+
+        <h3 style="text-align:center;">Relatório de Funcionários</h3>
+
+        <table>
+            <tr style="background-color: #f2f2f2;">
+                <th style="text-align:center;">Nome</th>
+                <th style="text-align:center;">E-mail</th>
+                <th style="text-align:center;">Departamento</th>
+            </tr>
+            {% for func in funcionarios_lista %}
+            <tr>
+                <td style="text-align:center;">{{ func.nome }}</td>
+                <td style="text-align:center;">{{ func.email }}</td>
+                <td style="text-align:center;">{{ func.departamento.nome }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+        <div class="page-break"></div>
     {% endif %}
 
-    <h3 style="text-align:center;">Relatório de Funcionários</h3>
-
-    <table>
-        <tr style="background-color: #f2f2f2;">
-            <th style="text-align:center;">Nome</th>
-            <th style="text-align:center;">E-mail</th>
-            <th style="text-align:center;">Departamento</th>
-        </tr>
-        {% for func in funcionarios_lista %}
-        <tr>
-            <td style="text-align:center;">{{ func.nome }}</td>
-            <td style="text-align:center;">{{ func.email }}</td>
-            <td style="text-align:center;">{{ func.departamento.nome }}</td>
-        </tr>
-        {% endfor %}
-    </table>
-    <div class="page-break"></div>
-    
     <script>
         document.getElementById('btnImprimir').addEventListener('click', function() {
             window.print();
