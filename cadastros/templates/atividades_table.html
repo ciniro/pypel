@@ -21,9 +21,9 @@
                 <button class="btn btn-sm">
                     <img src="{% static 'img/update.png' %}" alt="Alterar" width="20" height="20">
                 </button>
-                <!-- botao para associar coordenadores -->
-                <button class="btn btn-sm sucess-btn btnAssociarCoordenadorGrid" data-id="{{ atividade.id }}">
-                    <img src="{% static 'img/new_coord.png' %}" alt="Associar coordenador" width="20" height="20" title="Clique para associar coordenadores">
+                <!-- botao para associar responsaveis -->
+                <button class="btn btn-sm sucess-btn btnAssociarResponsavelGrid" data-id="{{ atividade.id }}">
+                    <img src="{% static 'img/new_coord.png' %}" alt="Associar responsavel" width="20" height="20" title="Clique para associar responsaveis">
                 </button>
             </td>
         </tr>
@@ -34,17 +34,17 @@
 <!-- javascript que vincula os botoes de associar do grid acima ao POST nos forms alocados em atividades.html -->
 <script>
     $(document).ready(function () {
-        // associa o btnAssociarCoordenadorGrid ao POST no frmGridCarregaCoordenadores
-        $('.btnAssociarCoordenadorGrid').click(function () {
+        // associa o btnAssociarResponsavelGrid ao POST no frmGridCarregaResponsaveis
+        $('.btnAssociarResponsavelGrid').click(function () {
             //desabilita a janela pai ate que a janela modal (filho) seja fechada
             desabilitaInteracoes();
 
             //abre a janela modal (filho)
-            $('#txtPostIdCoordenadores').val($(this).data('id'));
-            var form = $('#frmGridCarregaCoordenadores');
-            var windowName = 'jnlGridAssociarCoordenador';
+            $('#txtPostIdResponsaveis').val($(this).data('id'));
+            var form = $('#frmGridCarregaResponsaveis');
+            var windowName = 'jnlGridAssociarResponsavel';
             window.open('', windowName, 'width=800,height=800');
-            form.attr('action', "{% url 'cadastros:exibir_coordenadores_possiveis_para_atividade' %}");
+            form.attr('action', "{% url 'cadastros:exibir_responsaveis_possiveis_para_atividade' %}");
             form.attr('target', windowName);
             form.submit();
         });

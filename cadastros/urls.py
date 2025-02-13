@@ -26,11 +26,11 @@ urlpatterns = [
     path('excluir_atividade/', views.excluir_atividade, name='excluir_atividade'),
     path('pesquisar_atividade_por_nome/', views.pesquisar_atividade_por_nome, name='pesquisar_atividade_por_nome'),
     
-    #RELACIONANDO ATIVIDADES COM COORDENADORES (USUARIOS)
-    path('adicionar_coordenador_de_atividade/', views.adicionar_coordenador_de_atividade, name='adicionar_coordenador_de_atividade'),
-    path('excluir_coordenador_de_atividade/', views.excluir_coordenador_de_atividade, name='excluir_coordenador_de_atividade'),
-    path('exibir_coordenadores_possiveis_para_atividade/', views.exibir_coordenadores_possiveis_para_atividade, name='exibir_coordenadores_possiveis_para_atividade'),
-    path('pesquisar_coordenador_por_nome_para_atividade/', views.pesquisar_coordenador_por_nome_para_atividade, name='pesquisar_coordenador_por_nome_para_atividade'),
+    #RELACIONANDO ATIVIDADES COM RESPONSAVEIS (USUARIOS)
+    path('adicionar_responsavel_de_atividade/', views.adicionar_responsavel_de_atividade, name='adicionar_responsavel_de_atividade'),
+    path('excluir_responsavel_de_atividade/', views.excluir_responsavel_de_atividade, name='excluir_responsavel_de_atividade'),
+    path('exibir_responsaveis_possiveis_para_atividade/', views.exibir_responsaveis_possiveis_para_atividade, name='exibir_responsaveis_possiveis_para_atividade'),
+    path('pesquisar_responsavel_por_nome_para_atividade/', views.pesquisar_responsavel_por_nome_para_atividade, name='pesquisar_responsavel_por_nome_para_atividade'),
     #---------------------------------------------
     
 ]

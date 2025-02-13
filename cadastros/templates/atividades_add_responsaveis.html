@@ -3,64 +3,64 @@
 
 {% block conteudo %}
 
-<!-- JANELA QUE CARREGA OS DADOS DOS USUARIOS QUE PODEM SER ASSOCIADOS AO ATIVIDADES COMO COORDENADORES -->
+<!-- JANELA QUE CARREGA OS DADOS DOS USUARIOS QUE PODEM SER ASSOCIADOS AO ATIVIDADES COMO RESPONSAVEIS -->
 <div class="container mt-5">
-    <h1 class="mb-4">Associar Coordenadores</h1>
+    <h1 class="mb-4">Associar Responsáveis</h1>
     <div class="form-group row align-items-center mb-4">
         <div class="col-auto">
             <img src="{% static 'img/search.png' %}" alt="icone de uma lupa" width="20" height="20">
         </div>
         <div class="text-left">
-            <label for="txtBuscaCoordenador" class="col-form-label">Pesquisar por nome:</label>
+            <label for="txtBuscaResponsavel" class="col-form-label">Pesquisar por nome:</label>
         </div>
         <div class="col">
-            <input type="text" class="form-control" id="txtBuscaCoordenador" placeholder="Digite o nome">
+            <input type="text" class="form-control" id="txtBuscaResponsavel" placeholder="Digite o nome">
         </div>
     </div>
     <!-- campo que guarda o ID da atividade recebido via POST e setado aqui no javascript dessa pagina -->
     <input type="hidden" id="txtIdAtividade" name="txtIdAtividade" value="">
-    <!-- grid onde aparecem todos os usuarios que podem ser associados a atividade como coordenadores -->
-    <div id="coordenadores-table">            
-        {% include 'atividades_add_coordenadores_table.html' %}
+    <!-- grid onde aparecem todos os usuarios que podem ser associados a atividade como responsaveis -->
+    <div id="responsaveis-table">            
+        {% include 'atividades_add_responsaveis_table.html' %}
     </div>
 
 </div>
 
-<!-- scripts da associacao de coordenadores as atividades -->
+<!-- scripts da associacao de responsaveis as atividades -->
 <script>
     $(document).ready(function() {
-        /*seta o ID da atividade aqui em txtIdAtividade que foi passado via POST na variavel txtPostIdCoordenadores 
-        do form frmGridCarregaCoordenadores em atividades.html*/
-        var atividadeId = window.opener.$('#txtPostIdCoordenadores').val();
+        /*seta o ID da atividade aqui em txtIdAtividade que foi passado via POST na variavel txtPostIdResponsaveis 
+        do form frmGridCarregaResponsaveis em atividades.html*/
+        var atividadeId = window.opener.$('#txtPostIdResponsaveis').val();
         //seta o txtIdAtividade com o ID da atividade capturado
         $('#txtIdAtividade').val(atividadeId);
 
-        //rotinas que permitem a pesquisa de coordenadores no grid coordenadores-table que vem de atividades_add_coordenadores_table.html
-        function pesquisaCoordenadores(nome, page) {
+        //rotinas que permitem a pesquisa de responsaveis no grid responsaveis-table que vem de atividades_add_responsaveis_table.html
+        function pesquisaResponsaveis(nome, page) {
             const atividadeId = $('#txtIdAtividade').val();
             $.ajax({
-                url: '{% url "cadastros:pesquisar_coordenador_por_nome_para_atividade" %}',
+                url: '{% url "cadastros:pesquisar_responsavel_por_nome_para_atividade" %}',
                 data: {
                     'nome': nome,
                     'page': page,
                     'atividade_id': atividadeId
                 },
                 success: function(data) {
-                    $('#coordenadores-table').html(data.html);
+                    $('#responsaveis-table').html(data.html);
                 }
             });
         }
 
-        $('#txtBuscaCoordenador').on('input', function() {
+        $('#txtBuscaResponsavel').on('input', function() {
             const nome = $(this).val();
-            pesquisaCoordenadores(nome, 1);
+            pesquisaResponsaveis(nome, 1);
         });
 
         $(document).on('click', '.page-link', function(e) {
             e.preventDefault();
             const page = $(this).data('page');
-            const nome = $('#txtBuscaCoordenador').val();
-            pesquisaCoordenadores(nome, page);
+            const nome = $('#txtBuscaResponsavel').val();
+            pesquisaResponsaveis(nome, page);
         });
 
         //restaura as interacoes na janela pai quando esta janela filha e fechada

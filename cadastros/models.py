@@ -77,7 +77,7 @@ class Usuario(AbstractBaseUser):
     
 class Atividade(models.Model):
     nome = models.CharField(max_length=500)
-    coordenadores = models.ManyToManyField('Usuario', related_name='coordenadores')
+    responsaveis = models.ManyToManyField('Usuario', related_name='responsaveis')
         
     def __str__(self):
         return self.nome

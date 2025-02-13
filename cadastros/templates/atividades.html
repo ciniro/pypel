@@ -65,13 +65,13 @@
                 </div>
             </div>
 
-            <!-- coordenadores -->
-            <div id="divCadastroCoordenadores"  style="display: none;">
+            <!-- responsaveis -->
+            <div id="divCadastroResponsaveis"  style="display: none;">
                 <hr style="border-color: black; border-width: 1px;">
                 <div class="form-group row align-items-center has-validation">
-                    <div class="col-sm-2 col-form-label text-left">Coordenador(es):</div>
+                    <div class="col-sm-2 col-form-label text-left">Responsáveis:</div>
                     <div class="col-sm-10">
-                        <table class="table table-striped" id="grdCoordenadores">
+                        <table class="table table-striped" id="grdResponsaveis">
                             <thead>
                                 <tr>
                                     <th>Nome</th>
@@ -85,8 +85,8 @@
                             </tbody>
                         </table>
                         <div class="text-left">
-                            <button type="button" class="btn btn-success" id="btnAssociarCoordenador">
-                                <img src="{% static 'img/new_coord.png' %}" alt="Associar Coordenador" width="20" height="20"> ASSOCIAR COORDENADORES
+                            <button type="button" class="btn btn-success" id="btnAssociarResponsavel">
+                                <img src="{% static 'img/new_coord.png' %}" alt="Associar Responsavel" width="20" height="20"> ASSOCIAR RESPONSÁVEIS
                             </button>
                         </div>
                     </div>
@@ -128,10 +128,10 @@
     </div>
 </div>
 
-<!-- form que chama a janela atividades_add_coordenadores.html para gerir coordenadores de atividades -->
-<form id="frmGridCarregaCoordenadores" method="POST" target="popupWindow" style="display: none">
+<!-- form que chama a janela atividades_add_responsaveis.html para gerir responsaveis de atividades -->
+<form id="frmGridCarregaResponsaveis" method="POST" target="popupWindow" style="display: none">
     {% csrf_token %}
-    <input type="hidden" name="txtPostIdCoordenadores" id="txtPostIdCoordenadores" value="">
+    <input type="hidden" name="txtPostIdResponsaveis" id="txtPostIdResponsaveis" value="">
 </form>
 
 <!-- scripts do cadastro de atividades -->
@@ -149,8 +149,8 @@
                 //carregamento dos campos id----------------------------
                 //txtId é o campo hidden que guarda o id da atividade nesta pagina
                 $('#txtId').val(atividade_dados.id);
-                //txtPostIdCoordenadores e o campo hidden que guarda o id da atividade no form que abre a janela para associar coordenadores
-                $('#txtPostIdCoordenadores').val(atividade_dados.id);
+                //txtPostIdResponsaveis e o campo hidden que guarda o id da atividade no form que abre a janela para associar responsaveis
+                $('#txtPostIdResponsaveis').val(atividade_dados.id);
                 //------------------------------------------------------
 
                 //carregamento dos campos simples da atividade----------------
@@ -174,46 +174,46 @@
                 }
                 //------------------------------------------------------
 
-                //operacoes com coordenadores------------------
-                //carrega os coordenadores da atividade no grid de coordenadores
-                var $coordenadores = $('#grdCoordenadores tbody');
-                $coordenadores.empty();
-                $.each(atividade_dados.coordenadores, function(index, coordenador) {
-                    $coordenadores.append('<tr>' + 
-                                    '<td>' + coordenador.nome + '</td>' +
-                                    '<td>' + coordenador.email + '</td>' +
-                                    '<td>' + coordenador.departamento__sigla + '</td>' +
-                                    '<td><button type="button" class="btn btn-danger btn-sm delete-coordenador" data-id="' + 
-                                    coordenador.id + '">Remover</button></td></tr>');
+                //operacoes com responsaveis------------------
+                //carrega os responsaveis da atividade no grid de responsaveis
+                var $responsaveis = $('#grdResponsaveis tbody');
+                $responsaveis.empty();
+                $.each(atividade_dados.responsaveis, function(index, responsavel) {
+                    $responsaveis.append('<tr>' + 
+                                    '<td>' + responsavel.nome + '</td>' +
+                                    '<td>' + responsavel.email + '</td>' +
+                                    '<td>' + responsavel.departamento__sigla + '</td>' +
+                                    '<td><button type="button" class="btn btn-danger btn-sm delete-responsavel" data-id="' + 
+                                    responsavel.id + '">Remover</button></td></tr>');
                 });
                 
-                //botao associar coordenadores abaixo do grid de coordenadores
-                //prepara o form com o id da atividade para fazer post ao abrir a janela de associar coordenadores
+                //botao associar responsaveis abaixo do grid de responsaveis
+                //prepara o form com o id da atividade para fazer post ao abrir a janela de associar responsaveis
                 $(document).ready(function () {
-                    $('#btnAssociarCoordenador').click(function () {
+                    $('#btnAssociarResponsavel').click(function () {
                         //desabilita a janela pai ate que a janela modal (filho) seja fechada
                         desabilitaInteracoes();
 
                         //abre a janela modal (filho)
-                        $('#txtPostIdCoordenadores').val($('#txtId').val());
-                        var form = $('#frmGridCarregaCoordenadores');
-                        var windowName = 'jnlGridAssociarCoordenador';
+                        $('#txtPostIdResponsaveis').val($('#txtId').val());
+                        var form = $('#frmGridCarregaResponsaveis');
+                        var windowName = 'jnlGridAssociarResponsavel';
                         window.open('', windowName, 'width=800,height=800');
-                        form.attr('action', "{% url 'cadastros:exibir_coordenadores_possiveis_para_atividade' %}");
+                        form.attr('action', "{% url 'cadastros:exibir_responsaveis_possiveis_para_atividade' %}");
                         form.attr('target', windowName);
                         form.submit();
                     });
                 });
     
-                //botao excluir coordenador do grid de coordenadores
-                $('.delete-coordenador').click(function() {
-                    var coordenadorId = $(this).data('id');
+                //botao excluir responsavel do grid de responsaveis
+                $('.delete-responsavel').click(function() {
+                    var responsavelId = $(this).data('id');
                     var atividadeId = $('#txtId').val();
                     $.ajax({
-                        url: '{% url "cadastros:excluir_coordenador_de_atividade" %}',
+                        url: '{% url "cadastros:excluir_responsavel_de_atividade" %}',
                         method: 'POST',
                         data: {
-                            'coordenador_id': coordenadorId,
+                            'responsavel_id': responsavelId,
                             'atividade_id': atividadeId,
                             'csrfmiddlewaretoken': '{{ csrf_token }}'
                         },
@@ -226,13 +226,13 @@
                             }
                         },
                         error: function(xhr, status, error) {
-                            toastr.error('Erro ao excluir a associação de coordenador.');
+                            toastr.error('Erro ao excluir a associação de responsavel.');
                         }
                     });
                 });
 
-                //habilita a sessão do html onde fica o grid de coordenadores
-                $('#divCadastroCoordenadores').show();
+                //habilita a sessão do html onde fica o grid de responsaveis
+                $('#divCadastroResponsaveis').show();
                 //-----------------------------------------
 
                 $('#formLegend').text('Alterar atividade');
@@ -284,7 +284,7 @@
                 $('#jnlExcluir').modal('hide');
             },
             error: function(xhr, status, error) {
-                toastr.error('Remova as associações de coordenadores antes de excluir a atividade.');
+                toastr.error('Remova as associações de responsaveis antes de excluir a atividade.');
                 $('#jnlExcluir').modal('hide');
             }
         });
@@ -312,7 +312,7 @@
 
     clickNoGrid();
 
-    //eventos para lidar com a janela modal de associar coordenadores
+    //eventos para lidar com a janela modal de associar responsaveis
     function desabilitaInteracoes() {
         $('#jnlAtividadePrincipal').find('input, textarea, select, button').prop('disabled', true);
         $('#jnlAtividadePrincipal').css('pointer-events', 'none').css('opacity', '0.6');
