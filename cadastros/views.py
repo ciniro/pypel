@@ -170,11 +170,11 @@ def usuarios(request):
             return redirect('cadastros:usuarios')
 
     usuarios_lista = Usuario.objects.all().order_by('nome').exclude(Q(id=request.session['id_atual']))
-    departamentos_lista = Departamento.objects.all().order_by('nome').exclude(nome__iexact="Geral")
-
     paginator = Paginator(usuarios_lista, settings.NUMBER_GRID_PAGES)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
+    
+    departamentos_lista = Departamento.objects.all().order_by('nome').exclude(nome__iexact="Geral")
     perfis_lista = Perfil.objects.all()
 
     return render(request, "usuarios.html", {
